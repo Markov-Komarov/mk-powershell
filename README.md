@@ -11,7 +11,7 @@ Unused fuctions have been removed.
 Execute the following command in an elevated PowerShell window to install the PowerShell profile:
 
 ```
-irm https://raw.githubusercontent.com/Markov-Komarov/mk-profile/main/setup.ps1" | iex
+irm https://raw.githubusercontent.com/Markov-Komarov/mk-powershell/main/setup.ps1" | iex
 ```
 
 ## Fix the Missing Font
