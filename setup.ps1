@@ -37,7 +37,7 @@ if (!(Test-Path -Path $PROFILE -PathType Leaf)) {
 # Font Install
 # You will have to extract and Install this font manually
 # You will also need to set your Nerd Font of choice in your window defaults or in the Windows Terminal Settings.
-Invoke-RestMethod https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/CascadiaCode.zip?WT.mc_id=-blog-scottha -o cove.zip
+Invoke-RestMethod https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Meslo.zip?WT.mc_id=-blog-scottha -o Meslo.zip
 
 # Choco install
 #
