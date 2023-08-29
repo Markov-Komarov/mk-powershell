@@ -1,26 +1,28 @@
-## PowerShell template profile 
-## Version 1.03 - Tim Sneath <tim@sneath.org>
-## From https://gist.github.com/timsneath/19867b12eee7fd5af2ba
-##
-## This file should be stored in $PROFILE.CurrentUserAllHosts
-## If $PROFILE.CurrentUserAllHosts doesn't exist, you can make one with the following:
-##    PS> New-Item $PROFILE.CurrentUserAllHosts -ItemType File -Force
-## This will create the file and the containing subdirectory if it doesn't already 
-##
-## As a reminder, to enable unsigned script execution of local scripts on client Windows, 
-## you need to run this line (or similar) from an elevated PowerShell prompt:
-##   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
-## This is the default policy on Windows Server 2012 R2 and above for server Windows. For 
-## more information about execution policies, run Get-Help about_Execution_Policies.
-
-#$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-#if (Test-Path($ChocolateyProfile)) {
-#	Import-Module "$ChocolateyProfile"
-#}
+### PowerShell template profile 
+### Version 1.03 - Tim Sneath <tim@sneath.org>
+### From https://gist.github.com/timsneath/19867b12eee7fd5af2ba
+###
+### This file should be stored in $PROFILE.CurrentUserAllHosts
+### If $PROFILE.CurrentUserAllHosts doesn't exist, you can make one with the following:
+###    PS> New-Item $PROFILE.CurrentUserAllHosts -ItemType File -Force
+### This will create the file and the containing subdirectory if it doesn't already 
+###
+### As a reminder, to enable unsigned script execution of local scripts on client Windows, 
+### you need to run this line (or similar) from an elevated PowerShell prompt:
+###   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+### This is the default policy on Windows Server 2012 R2 and above for server Windows. For 
+### more information about execution policies, run Get-Help about_Execution_Policies.
 
 # Import Terminal Icons
 Import-Module -Name Terminal-Icons
 
+# Find out if the current user identity is elevated (has admin rights)
+$identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+$principal = New-Object Security.Principal.WindowsPrincipal $identity
+$isAdmin = $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+# If so and the current host is a command line, then change to red color 
+# as warning to user that they are operating in an elevated context
 # Useful shortcuts for traversing directories
 function cd... { Set-Location ..\.. }
 function cd.... { Set-Location ..\..\.. }
@@ -75,9 +77,9 @@ function dirs {
 function admin {
     if ($args.Count -gt 0) {   
         $argList = "& '" + $args + "'"
-        Start-Process "$PSHome\pwsh.exe" -Verb runAs -ArgumentList $argList
+        Start-Process "$psHome\powershell.exe" -Verb runAs -ArgumentList $argList
     } else {
-        Start-Process "$PSHome\pwsh.exe" -Verb runAs
+        Start-Process "$psHome\powershell.exe" -Verb runAs
     }
 }
 
@@ -92,9 +94,14 @@ function Edit-Profile {
     if ($host.Name -match "ise") {
         $psISE.CurrentPowerShellTab.Files.Add($profile.CurrentUserAllHosts)
     } else {
-        notepad $profile
+        notepad $profile.CurrentUserAllHosts
     }
 }
+
+# We don't need these any more; they were just temporary variables to get to $isAdmin. 
+# Delete them to prevent cluttering up the user profile. 
+Remove-Variable identity
+Remove-Variable principal
 
 Function Test-CommandExists {
     Param ($command)
@@ -104,14 +111,21 @@ Function Test-CommandExists {
     Catch { Write-Host "$command does not exist"; RETURN $false }
     Finally { $ErrorActionPreference = $oldPreference }
 } 
-
-
+#
 # Aliases
 #
 # If your favorite editor is not here, add an elseif and ensure that the directory it is installed in exists in your $env:Path
 #
 if (Test-CommandExists nvim) {
     $EDITOR='nvim'
+} elseif (Test-CommandExists pvim) {
+    $EDITOR='pvim'
+} elseif (Test-CommandExists vim) {
+    $EDITOR='vim'
+} elseif (Test-CommandExists vi) {
+    $EDITOR='vi'
+} elseif (Test-CommandExists code) {
+    $EDITOR='code'
 } elseif (Test-CommandExists notepad) {
     $EDITOR='notepad'
 } elseif (Test-CommandExists notepad++) {
@@ -136,7 +150,19 @@ function lazyg {
 function Get-PubIP {
     (Invoke-WebRequest http://ifconfig.me/ip ).Content
 }
+function uptime {
+    #Windows Powershell only
+	If ($PSVersionTable.PSVersion.Major -eq 5 ) {
+		Get-WmiObject win32_operatingsystem |
+        Select-Object @{EXPRESSION={ $_.ConverttoDateTime($_.lastbootuptime)}} | Format-Table -HideTableHeaders
+	} Else {
+        net statistics workstation | Select-String "since" | foreach-object {$_.ToString().Replace('Statistics since ', '')}
+    }
+}
 
+function reload-profile {
+    & $profile
+}
 function find-file($name) {
     Get-ChildItem -recurse -filter "*${name}*" -ErrorAction SilentlyContinue | ForEach-Object {
         $place_path = $_.directory
@@ -178,6 +204,16 @@ function pkill($name) {
 }
 function pgrep($name) {
     Get-Process $name
+}
+
+# Import the Chocolatey Profile that contains the necessary code to enable
+# tab-completions to function for `choco`.
+# Be aware that if you are missing these lines from your profile, tab completion
+# for `choco` will not function.
+# See https://ch0.co/tab-completion for details.
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Test-Path($ChocolateyProfile)) {
+    Import-Module "$ChocolateyProfile"
 }
 
 $ENV:STARSHIP_CONFIG = "$HOME\Documents\PowerShell\starship.toml"
