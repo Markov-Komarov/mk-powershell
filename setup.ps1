@@ -13,7 +13,7 @@ if (!(Test-Path -Path $PROFILE -PathType Leaf)) {
             }
         }
 
-        Invoke-RestMethod https://raw.githubusercontent.com/Markov-Komarov/mk-powershell/main/Microsoft.PowerShell_profile.ps1 -o $PROFILE
+        Invoke-RestMethod https://raw.githubusercontent.com/Markov-Komarov/mk-powershell/main/profile.ps1 -o $PROFILE
         Write-Host "The profile @ [$PROFILE] has been created."
 		
 		Invoke-WebRequest https://raw.githubusercontent.com/Markov-Komarov/mk-powershell/main/starship.toml -o "$HOME\Documents\PowerShell\starship.toml"
@@ -26,7 +26,7 @@ if (!(Test-Path -Path $PROFILE -PathType Leaf)) {
 # If the file already exists, show the message and replace it.
  else {
 		 Get-Item -Path $PROFILE | Move-Item -Destination oldprofile.ps1
-		 Invoke-RestMethod https://raw.githubusercontent.com/Markov-Komarov/mk-powershell/main/Microsoft.PowerShell_profile.ps1 -o $PROFILE
+		 Invoke-RestMethod https://raw.githubusercontent.com/Markov-Komarov/mk-powershell/main/profile.ps1 -o $PROFILE
 		 Write-Host "The profile @ [$PROFILE] has been created and old profile removed."
 		 
 		 Invoke-WebRequest https://raw.githubusercontent.com/Markov-Komarov/mk-powershell/main/starship.toml -o "$HOME\Documents\PowerShell\starship.toml"
