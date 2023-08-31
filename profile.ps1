@@ -77,9 +77,9 @@ function dirs {
 function admin {
     if ($args.Count -gt 0) {   
         $argList = "& '" + $args + "'"
-        Start-Process "$psHome\powershell.exe" -Verb runAs -ArgumentList $argList
+        Start-Process "$psHome\pwsh.exe" -Verb runAs -ArgumentList $argList
     } else {
-        Start-Process "$psHome\powershell.exe" -Verb runAs
+        Start-Process "$psHome\pwsh.exe" -Verb runAs
     }
 }
 
@@ -117,21 +117,9 @@ Function Test-CommandExists {
 # If your favorite editor is not here, add an elseif and ensure that the directory it is installed in exists in your $env:Path
 #
 if (Test-CommandExists nvim) {
-    $EDITOR='nvim'
-} elseif (Test-CommandExists pvim) {
-    $EDITOR='pvim'
-} elseif (Test-CommandExists vim) {
-    $EDITOR='vim'
-} elseif (Test-CommandExists vi) {
-    $EDITOR='vi'
-} elseif (Test-CommandExists code) {
-    $EDITOR='code'
+    $EDITOR='notepad++'
 } elseif (Test-CommandExists notepad) {
     $EDITOR='notepad'
-} elseif (Test-CommandExists notepad++) {
-    $EDITOR='notepad++'
-} elseif (Test-CommandExists sublime_text) {
-    $EDITOR='sublime_text'
 }
 Set-Alias -Name vim -Value $EDITOR
 
@@ -150,15 +138,16 @@ function lazyg {
 function Get-PubIP {
     (Invoke-WebRequest http://ifconfig.me/ip ).Content
 }
-function uptime {
-    #Windows Powershell only
-	If ($PSVersionTable.PSVersion.Major -eq 5 ) {
-		Get-WmiObject win32_operatingsystem |
-        Select-Object @{EXPRESSION={ $_.ConverttoDateTime($_.lastbootuptime)}} | Format-Table -HideTableHeaders
-	} Else {
-        net statistics workstation | Select-String "since" | foreach-object {$_.ToString().Replace('Statistics since ', '')}
-    }
-}
+
+#function uptime {
+#    #Windows Powershell only
+#	If ($PSVersionTable.PSVersion.Major -eq 5 ) {
+#		Get-WmiObject win32_operatingsystem |
+#        Select-Object @{EXPRESSION={ $_.ConverttoDateTime($_.lastbootuptime)}} | Format-Table -HideTableHeaders
+#	} Else {
+#        net statistics workstation | Select-String "since" | foreach-object {$_.ToString().Replace('Statistics since ', '')}
+#    }
+#}
 
 function reload-profile {
     & $profile
@@ -211,10 +200,10 @@ function pgrep($name) {
 # Be aware that if you are missing these lines from your profile, tab completion
 # for `choco` will not function.
 # See https://ch0.co/tab-completion for details.
-$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-if (Test-Path($ChocolateyProfile)) {
-    Import-Module "$ChocolateyProfile"
-}
+#$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+#if (Test-Path($ChocolateyProfile)) {
+#    Import-Module "$ChocolateyProfile"
+#}
 
 $ENV:STARSHIP_CONFIG = "$HOME\Documents\PowerShell\starship.toml"
 
