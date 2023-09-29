@@ -1,6 +1,6 @@
 # mk-powershell
 My personal configuration and customization for PowerShell.
-Pleas note that this is based on [ChrisTitusTech Powershell](https://github.com/ChrisTitusTech/powershell-profile/) profile.
+Please note that this is based on [ChrisTitusTech Powershell](https://github.com/ChrisTitusTech/powershell-profile/) profile.
 It has been modified by me for my personal usage and liking.
 
 The main change it's the prompt preference, changing it from Oh-My-Posh to Starship for better performance and shorter loading times.
