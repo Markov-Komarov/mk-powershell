@@ -17,10 +17,10 @@
 try{
     $url = "https://raw.githubusercontent.com/Markov-Komarov/mk-powershell/main/profile.ps1"
     $oldhash = Get-FileHash $PROFILE
-    Invoke-RestMethod $url -OutFile "$env:temp/profile.ps1"
-    $newhash = Get-FileHash "$env:temp/profile.ps1"
+    Invoke-RestMethod $url -OutFile "$env:temp/Microsoft.PowerShell_profile.ps1"
+    $newhash = Get-FileHash "$env:temp/Microsoft.PowerShell_profile.ps1"
     if ($newhash -ne $oldhash) {
-        Get-Content "$env:temp/profile.ps1" | Set-Content $PROFILE
+        Get-Content "$env:temp/Microsoft.PowerShell_profile.ps1" | Set-Content $PROFILE
         . $PROFILE
         return
     }
