@@ -19,7 +19,7 @@ if (!(Test-Path -Path $PROFILE -PathType Leaf)) {
         [$HOME\Documents\PowerShell\Profile.ps1] as there is an updater in the installed profile 
         which uses the hash to update the profile and will lead to loss of changes"
 		
-		Invoke-WebRequest https://raw.githubusercontent.com/Markov-Komarov/mk-powershell/main/starship.toml -o "$HOME\Documents\PowerShell\starship.toml"
+		Invoke-WebRequest https://raw.githubusercontent.com/Markov-Komarov/mk-powershell/main/starship.toml -OutFile "$HOME\Documents\PowerShell\starship.toml"
 		Write-Host "The starship config @ [$env:userprofile + "\Documents\Powershell"] has been created."
     }
     catch {
