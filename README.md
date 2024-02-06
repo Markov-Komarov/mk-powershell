@@ -16,9 +16,6 @@ irm "https://raw.githubusercontent.com/Markov-Komarov/mk-powershell/main/setup.p
 
 ## Fix the Missing Font
 
-After running the script, you'll find a downloaded `Meslo.zip` file in the folder you executed the script from. Follow these steps to install the required nerd fonts:
+Since the script installs the NerdFont you'll just need to change the font settings on the Terminal app or Powershell (Whichever you're using).
 
-1. Extract the `Meslo.zip` file.
-2. Locate and install the nerd fonts.
-
-Enjoy a minimalistic and enhanced Powershell experience!
+Enjoy a minimalistic looking and enhanced Powershell experience!
